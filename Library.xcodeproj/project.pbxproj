@@ -20,6 +20,7 @@
 		07E529F31E200DF40032B03D /* AppNetAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E529F21E200DF40032B03D /* AppNetAPI.swift */; };
 		07E529F51E2030D80032B03D /* BookPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E529F41E2030D80032B03D /* BookPost.swift */; };
 		07E529F71E203BD90032B03D /* BookPostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E529F61E203BD90032B03D /* BookPostTests.swift */; };
+		07E529FB1E23337D0032B03D /* Notes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07E529FA1E23337D0032B03D /* Notes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		07E529F21E200DF40032B03D /* AppNetAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNetAPI.swift; sourceTree = "<group>"; };
 		07E529F41E2030D80032B03D /* BookPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookPost.swift; sourceTree = "<group>"; };
 		07E529F61E203BD90032B03D /* BookPostTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookPostTests.swift; sourceTree = "<group>"; };
+		07E529FA1E23337D0032B03D /* Notes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				07E529BA1E1F35DB0032B03D /* AppDelegate.swift */,
 				07E529BE1E1F35DB0032B03D /* Main.storyboard */,
 				07E529BC1E1F35DB0032B03D /* ViewController.swift */,
+				07E529FA1E23337D0032B03D /* Notes.swift */,
 				07E529E81E1F36250032B03D /* Book.swift */,
 				07E529F01E200CCF0032B03D /* BookStore.swift */,
 				07E529F41E2030D80032B03D /* BookPost.swift */,
@@ -278,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				07E529F31E200DF40032B03D /* AppNetAPI.swift in Sources */,
+				07E529FB1E23337D0032B03D /* Notes.swift in Sources */,
 				07E529BD1E1F35DB0032B03D /* ViewController.swift in Sources */,
 				07E529BB1E1F35DB0032B03D /* AppDelegate.swift in Sources */,
 				07E529F11E200CCF0032B03D /* BookStore.swift in Sources */,

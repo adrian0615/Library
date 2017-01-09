@@ -11,7 +11,7 @@ import Foundation
 
 public struct Book : Equatable {
     public static func ==(lhs: Book, rhs: Book) -> Bool {
-        return lhs.checkedOut == rhs.checkedOut && lhs.title == rhs.title && lhs.author == rhs.author && lhs.genre == rhs.genre  && lhs.checkedOutBy == rhs.checkedOutBy && lhs.userName == rhs.userName
+        return lhs.checkedOut == rhs.checkedOut && lhs.title == rhs.title && lhs.author == rhs.author && lhs.genre == rhs.genre  && lhs.checkedOutBy == rhs.checkedOutBy 
         
     }
     
@@ -21,7 +21,7 @@ public struct Book : Equatable {
     public var author: String
     public var genre: String
     public var checkedOutBy: String
-    public var userName: String
+    
     
     
     init(checkedOut: Bool, title: String, author: String, genre: String, checkedOutBy: String) {
