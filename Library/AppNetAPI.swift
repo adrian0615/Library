@@ -14,6 +14,7 @@ internal struct AppNetAPI {
         case invalidJSONData
     }
     
-    internal static let globalStreamURL: URL = URL(string: "https://paul-tiy-library.herokuapp.com/sample.json")!
+    internal static let globalStreamURL: URL = URL(string: "https://paul-tiy-library.herokuapp.com/book-list.json")!
     
     }
+

@@ -11,7 +11,7 @@ import Foundation
 
 public struct Book : Equatable {
     public static func ==(lhs: Book, rhs: Book) -> Bool {
-        return lhs.checkedOut == rhs.checkedOut && lhs.title == rhs.title && lhs.author == rhs.author && lhs.genre == rhs.genre  && lhs.checkedOutBy == rhs.checkedOutBy
+        return lhs.checkedOut == rhs.checkedOut && lhs.title == rhs.title && lhs.author == rhs.author && lhs.genre == rhs.genre  && lhs.checkedOutBy == rhs.checkedOutBy && lhs.userName == rhs.userName
         
     }
     
@@ -20,10 +20,11 @@ public struct Book : Equatable {
     public var title: String
     public var author: String
     public var genre: String
-    public var checkedOutBy: String?
+    public var checkedOutBy: String
+    public var userName: String
     
     
-    init(checkedOut: Bool, title: String, author: String, genre: String, checkedOutBy: String?) {
+    init(checkedOut: Bool, title: String, author: String, genre: String, checkedOutBy: String) {
         self.checkedOut = checkedOut
         self.title = title
         self.author = author
@@ -35,9 +36,9 @@ public struct Book : Equatable {
     
     init?(jsonObject: [String: Any]) {
         
-        let bookCheckedOutBy = jsonObject["checkedOutBy"] as? String
         
         guard let bookCheckedOut = jsonObject["checkedOut"] as? Bool,
+            let bookCheckedOutBy = jsonObject["checkedOutBy"] as? String,
             let booktitle = jsonObject["title"] as? String,
             let bookGenre = jsonObject["genre"] as? String,
             let bookAuthor = jsonObject["author"] as? String else {

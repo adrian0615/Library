@@ -9,7 +9,7 @@
 import Foundation
 
 
-enum BooksResult {
+internal enum BooksResult {
     //lets you know if we were able to fetch a collection of posts of not
     case success([Book])
     case failure(BookStore.Error)
@@ -35,7 +35,7 @@ internal final class BookStore {
             
             // this shows that the data was properly collected
             if let data = optionalData {
-                completion(self.processRecentBooksRequest(data: data, error: optionalError ))
+                completion(self.processRecentBooksRequest(data: data, error: optionalError))
                 
                 //this shows that there was an httpResponse error (404 not found, etc)
             } else if let response = optionalResponse {
