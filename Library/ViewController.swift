@@ -134,11 +134,21 @@ class ViewController: UIViewController, UITextFieldDelegate {
             completedActionLabel.text = "Book Returned"
         }
         bookStore.fetchGlobalBooks { result in
-            print(result)
+            switch result {
+            case let .success(array):
+                self.books = array
+                self.currentBook = self.books[self.booksIndex]
+                self.update()
+                self.updateCheckOut()
+                self.updateTextField()
+            case let .failure(error):
+                print("Failed to retrieve books. Error: \(error)")
+            }
         }
         update()
         updateCheckOut()
         updateTextField()
+        updateStatus()
         return false
     }
     
@@ -148,16 +158,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         userNameTextField.delegate = self
-        bookStore.fetchGlobalBooks { result in
-            print(result)
-        }
-    }
-    
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
         bookStore.fetchGlobalBooks { result in
             switch result {
             case let .success(array):
@@ -169,8 +169,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
             case let .failure(error):
                 print("Failed to retrieve books. Error: \(error)")
             }
-            
+            print(result)
         }
+    }
+    
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.update()
         self.updateCheckOut()
         self.updateTextField()

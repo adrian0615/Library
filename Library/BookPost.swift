@@ -24,7 +24,7 @@ struct BookPost {
     
     
     
-    let payload = try! JSONSerialization.data(withJSONObject: ["title": "The Fellowship of the Ring", "userName": "John Connor"], options: [])
+    let payload = try! JSONSerialization.data(withJSONObject: ["title": title, "userName": userName], options: [])
     request.httpBody = payload
     
     let task = session.dataTask(with: request) { (optionalData, optionalResponse, optionalError) in
@@ -57,7 +57,7 @@ struct BookPost {
         
         
         
-        let payload = try! JSONSerialization.data(withJSONObject: ["title": "Cryoburn", "userName": "John Conner"], options: [])
+        let payload = try! JSONSerialization.data(withJSONObject: ["title": title, "userName": userName], options: [])
         request.httpBody = payload
         
         let task = session.dataTask(with: request) { (optionalData, optionalResponse, optionalError) in
