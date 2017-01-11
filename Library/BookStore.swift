@@ -29,7 +29,7 @@ internal final class BookStore {
         return URLSession(configuration: .default)
     }()
     //reaching out for posts while checking for multiple errors if we don't receive them
-    internal func fetchGlobalPosts(completion: @escaping (BooksResult) -> ()) {
+    internal func fetchGlobalBooks(completion: @escaping (BooksResult) -> ()) {
         //dataTask retrives the contents of the URL
         let task = session.dataTask(with: AppNetAPI.globalStreamURL) { (optionalData, optionalResponse, optionalError) in
             

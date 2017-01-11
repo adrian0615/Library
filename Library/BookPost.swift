@@ -10,7 +10,7 @@ import Foundation
 
 struct BookPost {
 
-func postCheckout(entries: [String: String]) {
+    func postCheckout(title: String, userName: String) {
     
     let session = URLSession.shared
     //let url = URL(string: "https://paul-tiy-library.herokuapp.com/book-return.json")!
@@ -24,7 +24,7 @@ func postCheckout(entries: [String: String]) {
     
     
     
-    let payload = try! JSONSerialization.data(withJSONObject: ["title": "Cryoburn", "userName": "John Conner"], options: [])
+    let payload = try! JSONSerialization.data(withJSONObject: ["title": "The Fellowship of the Ring", "userName": "John Connor"], options: [])
     request.httpBody = payload
     
     let task = session.dataTask(with: request) { (optionalData, optionalResponse, optionalError) in
@@ -44,7 +44,7 @@ func postCheckout(entries: [String: String]) {
     }
     task.resume()
 }
-    func postReturn(entries: [String: String]) {
+    func postReturn(title: String, userName: String) {
         
         let session = URLSession.shared
         let url = URL(string: "https://paul-tiy-library.herokuapp.com/book-return.json")!

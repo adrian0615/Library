@@ -8,38 +8,28 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
-    var currentBook = Book(checkedOut: false, title: "The Martian", author: "Andy Weir", genre: "Science Fiction", checkedOutBy: "none")
     let bookStore = BookStore()
-    //let bookPost = BookPost()
+    let bookPost = BookPost()
     
-    /*var booksResult = BooksResult()
-     
-     
-     var books: [Book] {
-     switch booksResult.self {
-     case let .success(value):
-     return value
-     case .failure:
-     return []
-     }
-     }
-     
-     var booksIndex: Int = 0 {
-     didSet {
-     if booksIndex >= books.count {
-     booksIndex %= books.count
-     }
-     while booksIndex < 0 {
-     booksIndex += books.count
-     }
-     }
-     }
-     
-     var currentBook: Book {
-     return books[booksIndex]
-     }*/
+    var books: [Book] = []
+    var currentBook: Book = Book(checkedOut: false, title: "", author: "", genre: "", checkedOutBy: "")
+    
+    
+    var booksIndex: Int = 0 {
+        didSet {
+            if booksIndex >= books.count {
+                booksIndex %= books.count
+            }
+            while booksIndex < 0 {
+                booksIndex += books.count
+            }
+        }
+    }
+    
+    
+    
     
     
     
@@ -50,51 +40,151 @@ class ViewController: UIViewController {
     @IBOutlet var genreLabel: UILabel!
     @IBOutlet var bookCountLabel: UILabel!
     
-    /*@IBAction func prevButton() {
-     booksIndex -= 1
-     }
-     @IBAction func nextButton() {
-     booksIndex += 1
-     }
-     @IBAction func checkOutSwitch() {
-     if currentBook.checkedOut == false && currentBook.checkedOutBy == "none" {
-     checkOutSwitch()
-     }
-     
-     
-     }
-     @IBOutlet var userNameTextField: UITextField!
-     
-     @IBAction func enter() {
-     userNameTextField.resignFirstResponder()
-     }
-     @IBAction func userInputTextField()  {
-     if currentBook.checkedOut == false && currentBook.checkedOutBy == "none" {
-     
-     
-     }*/
+    @IBAction func prevButton() {
+        booksIndex -= 1
+        self.currentBook = self.books[self.booksIndex]
+        update()
+        updateCheckOut()
+        updateTextField()
+        completedActionLabel.isHidden=true
+    }
+    @IBAction func nextButton() {
+        booksIndex += 1
+        self.currentBook = self.books[self.booksIndex]
+        update()
+        updateCheckOut()
+        updateTextField()
+        completedActionLabel.isHidden=true
+    }
+    
+    @IBOutlet var checkOutBookLabel: UILabel!
+    @IBOutlet var checkOutSwitch: UISwitch!
+    @IBOutlet var userNameTextField: UITextField!
+    @IBOutlet var statusLabel: UILabel!
+    @IBOutlet var enterInstructionsLabel: UILabel!
+    @IBOutlet var completedActionLabel: UILabel!
+    
+    
+    @IBAction func switchChanged(_ sender: Any) {
+        updateTextField()
+        
+    }
+    
+    
+    
+    func updateCheckOut() {
+        if currentBook.checkedOut == true {
+            checkOutBookLabel.text = "Return Book"
+        } else {
+            checkOutBookLabel.text = "Checkout Book"
+        }
+    }
+    
+    func updateTextField() {
+        if checkOutSwitch.isOn == false {
+            checkOutBookLabel.isHighlighted = false
+            userNameTextField.isHidden = true
+            enterInstructionsLabel.isHidden = true
+        } else if checkOutSwitch.isOn == true {
+            checkOutBookLabel.isHighlighted = true
+            userNameTextField.isHidden = false
+            enterInstructionsLabel.isHidden = false
+            userNameTextField.isEnabled = checkOutSwitch.isOn
+            if currentBook.checkedOut == true {
+                enterInstructionsLabel.text = "Enter Correct Name to Return Book"
+            } else {
+                enterInstructionsLabel.text = "Enter Name to Checkout Book"
+            }
+        }
+        
+    }
+    
+    func updateStatus() {
+        if currentBook.checkedOut == true {
+            statusLabel.text = "Checked out by: \(currentBook.checkedOutBy)"
+        } else {
+            statusLabel.text = "Available"
+        }
+    }
+    
+    
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // Don't do anything if there is no text
+        guard let userName = textField.text else {
+            return false
+        }
+        
+        // Clear out the text
+        textField.text = nil
+        // Deal with the entry
+        
+        if currentBook.checkedOut == false {
+            bookPost.postCheckout(title: currentBook.title, userName: userName)
+            print(userName)
+            checkOutSwitch.isOn = false
+            completedActionLabel.isHidden = false
+            completedActionLabel.text = "Book Checked Out"
+        } else {
+            bookPost.postReturn(title: currentBook.title, userName: userName)
+            print(userName)
+            checkOutSwitch.isOn = false
+            completedActionLabel.isHidden = false
+            completedActionLabel.text = "Book Returned"
+        }
+        bookStore.fetchGlobalBooks { result in
+            print(result)
+        }
+        update()
+        updateCheckOut()
+        updateTextField()
+        return false
+    }
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bookStore.fetchGlobalPosts { result in
+        userNameTextField.delegate = self
+        bookStore.fetchGlobalBooks { result in
             print(result)
         }
-        //bookPost.postBook()
     }
     
-    func update() {
-        titleLabel.text = currentBook.title
-        authorLabel.text = currentBook.author
-        genreLabel.text = currentBook.genre
-        //bookCountLabel.text = "\(String(booksIndex)) of \(String(books.count))"
-    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        update()
+        
+        bookStore.fetchGlobalBooks { result in
+            switch result {
+            case let .success(array):
+                self.books = array
+                self.currentBook = self.books[self.booksIndex]
+                self.update()
+                self.updateCheckOut()
+                self.updateTextField()
+            case let .failure(error):
+                print("Failed to retrieve books. Error: \(error)")
+            }
+            
+        }
+        self.update()
+        self.updateCheckOut()
+        self.updateTextField()
+        completedActionLabel.isHidden=true
+        
     }
     
-    
+    func update() {
+        updateStatus()
+        titleLabel.text = currentBook.title
+        authorLabel.text = currentBook.author
+        genreLabel.text = currentBook.genre
+        bookCountLabel.text = "\(String(booksIndex + 1)) of \(String(books.count))"
+    }
     
     
     
