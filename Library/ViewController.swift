@@ -44,16 +44,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
         booksIndex -= 1
         self.currentBook = self.books[self.booksIndex]
         update()
-        updateCheckOut()
-        updateTextField()
         completedActionLabel.isHidden=true
     }
     @IBAction func nextButton() {
         booksIndex += 1
         self.currentBook = self.books[self.booksIndex]
         update()
-        updateCheckOut()
-        updateTextField()
         completedActionLabel.isHidden=true
     }
     
@@ -66,7 +62,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     
     @IBAction func switchChanged(_ sender: Any) {
-        updateTextField()
+        update()
         
     }
     
@@ -121,35 +117,54 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Deal with the entry
         
         if currentBook.checkedOut == false {
-            bookPost.postCheckout(title: currentBook.title, userName: userName)
-            print(userName)
-            checkOutSwitch.isOn = false
-            completedActionLabel.isHidden = false
-            completedActionLabel.text = "Book Checked Out"
-        } else {
-            bookPost.postReturn(title: currentBook.title, userName: userName)
-            print(userName)
-            checkOutSwitch.isOn = false
-            completedActionLabel.isHidden = false
-            completedActionLabel.text = "Book Returned"
-        }
-        bookStore.fetchGlobalBooks { result in
-            switch result {
-            case let .success(array):
-                self.books = array
-                self.currentBook = self.books[self.booksIndex]
-                self.update()
-                self.updateCheckOut()
-                self.updateTextField()
-            case let .failure(error):
-                print("Failed to retrieve books. Error: \(error)")
+            bookPost.postCheckout(title: currentBook.title, userName: userName) { checkoutResult in
+                switch checkoutResult {
+        
+                case let .success(array) :
+                    self.books = array
+                    self.currentBook = self.books[self.booksIndex]
+                    self.update()
+                    
+                    print("----------------------")
+                    print("success")
+                    print("----------------------")
+        
+                    self.checkOutSwitch.isOn = false
+                    self.completedActionLabel.isHidden = false
+                    self.completedActionLabel.text = "Book Checked Out"
+                    self.currentBook = self.books[self.booksIndex]
+                
+                    
+                case let .failure(error) :
+                    print("Failed to Checkout Book.  Error: \(error)")
+                    
+                }
             }
+            return true
+        } else {
+            
+            bookPost.postReturn(title: currentBook.title, userName: userName) { returnResult in
+                switch returnResult {
+                case let .success(array) :
+                    self.books = array
+                    self.currentBook = self.books[self.booksIndex]
+                    self.update()
+            print("----------------------")
+            print("success")
+            print("----------------------")
+            self.checkOutSwitch.isOn = false
+            self.completedActionLabel.isHidden = false
+            self.completedActionLabel.text = "Book Returned"
+                    
+                    
+                    
+                case let .failure(error):
+                    print("Failed to Return Book. Error: \(error)")
         }
-        update()
-        updateCheckOut()
-        updateTextField()
-        updateStatus()
-        return false
+            }
+            return true
+        }
+
     }
     
     
@@ -164,8 +179,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.books = array
                 self.currentBook = self.books[self.booksIndex]
                 self.update()
-                self.updateCheckOut()
-                self.updateTextField()
             case let .failure(error):
                 print("Failed to retrieve books. Error: \(error)")
             }
@@ -179,23 +192,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         
         self.update()
-        self.updateCheckOut()
-        self.updateTextField()
+        
+
         completedActionLabel.isHidden=true
         
     }
     
     func update() {
-        updateStatus()
-        titleLabel.text = currentBook.title
-        authorLabel.text = currentBook.author
-        genreLabel.text = currentBook.genre
-        bookCountLabel.text = "\(String(booksIndex + 1)) of \(String(books.count))"
+        OperationQueue.main.addOperation {
+            
+        self.updateStatus()
+        self.updateTextField()
+        self.updateCheckOut()
+        self.titleLabel.text = self.currentBook.title
+        self.authorLabel.text = self.currentBook.author
+        self.genreLabel.text = self.currentBook.genre
+        self.bookCountLabel.text = "\(String(self.booksIndex + 1)) of \(String(self.books.count))"
+    }
     }
     
     
-    
-    
-    
+    //  }
 }
-    
+
